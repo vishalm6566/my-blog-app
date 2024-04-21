@@ -44,11 +44,10 @@ router.put("/editblog", (request, response) => {
 });
 
 router.post("/addblog", (request, response) => {
-  const { title, contents } = request.body;
-  console.log(request.body);
+  const { title, contents, category_id } = request.body;
   console.log("edit blog ok");
-  const query = "insert into blogs (title, contents) values (?,?); ";
-  db.pool.execute(query, [title, contents], (error, result) => {
+  const query = "insert into blogs (user_id, category_id, title, contents) values (?,?,?,?); ";
+  db.pool.execute(query, [request.userId, category_id, title, contents], (error, result) => {
     response.send(utils.createResult(error, result));
   });
 });

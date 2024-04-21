@@ -61,6 +61,7 @@ router.post("/login", (request, response) => {
           const userData = {
             token,
             name: `${user["firstName"]} ${user["lastName"]}`,
+            id : user.id,
           };
           response.send(utils.createSuccessResult(userData));
         }

@@ -4,10 +4,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { removeBlogAction, addAllBlogAction } from "../features/blogSlice";
 import { useNavigate, Link } from "react-router-dom";
 
-
 export default function BlogList() {
   const dispatch = useDispatch();
   const blogs = useSelector((state) => state.blog.items);
+  const userId = useSelector((state) => state.user.id);
   const navigate = useNavigate();
   useEffect(() => {
     getBlogs();
@@ -32,8 +32,8 @@ export default function BlogList() {
         <u>blogList works</u>
       </h4>
       <div className="row">
-        <div className="col"></div>
-        <div className="col table">
+        <div className="col-2"></div>
+        <div className="col-6 table">
           <table>
             <thead>
               <th>Title</th>
@@ -44,38 +44,45 @@ export default function BlogList() {
             <tbody>
               {blogs.length != 0 &&
                 blogs.map((blog) => {
+                  console.log(blog.id + userId)
                   return (
                     <tr key={blog.id}>
                       <td>{blog.title}</td>
                       <td>{blog.contents}</td>
                       <td>
-                        <button
-                          onClick={() => {
-                            editBlog(blog);
-                          }}
-                          className="btn btn-primary"
-                        >
-                          Edit
-                        </button>
+                        {blog.user_id == userId && (
+                          <button
+                            onClick={() => {
+                              editBlog(blog);
+                            }}
+                            className="btn btn-primary"
+                          >
+                            Edit
+                          </button>
+                        )}
                       </td>
                       <td>
-                        <button
-                          onClick={() => {
-                            removeBlog(blog);
-                          }}
-                          className="btn btn-danger"
-                        >
-                          delete
-                        </button>
+                        {blog.user_id == userId && (
+                          <button
+                            onClick={() => {
+                              removeBlog(blog);
+                            }}
+                            className="btn btn-danger"
+                          >
+                            delete
+                          </button>
+                        )}
                       </td>
                     </tr>
                   );
                 })}
             </tbody>
           </table>
-          <Link className="btn btn-success" to="/addnewblog">Add blog</Link>
+          <Link className="btn btn-success" to="/addnewblog">
+            Add blog
+          </Link>
         </div>
-        <div className="col"></div>
+        <div className="col-2"></div>
       </div>
     </div>
   );

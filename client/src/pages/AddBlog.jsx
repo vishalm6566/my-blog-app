@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { editBlogData } from "../services/blog";
+import { addMyBlog, editBlogData, getMyBlogsData } from "../services/blog";
+import { useSelector } from "react-redux";
 
-export default function EditBlog() {
+export default function AddBlog() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [blog, setBlog] = useState(location.state);
+  const [blog, setBlog] = useState({});
+  const [selectorValue, setSelectorValue] = useState();
+  const categories = useSelector((state)=>state.category.items);
+  console.log(categories);
 
   const EditTheBlog = async () => {
-    setBlog({...blog, id : location.state.id});
-    const response = await editBlogData(blog);
+    // setBlog({...blog, id : location.state.id});
+    const response = await addMyBlog(blog);
     toast.success("blog edited successfully....");
     navigate("/home");
   };
@@ -24,14 +27,13 @@ export default function EditBlog() {
     <div className="row">
       <div className="col"></div>
       <div className="col form">
-        <h3 className="page-title">Edit the Blog</h3>
+        <h3 className="page-title">Add the Blog</h3>
         <input
           type="text"
           className="form-control m-2"
           onChange={(e) =>
             setBlog((prev) => ({ ...prev, title: e.target.value }))
           }
-          defaultValue={location.state.title}
         />
         <input
           type="text"
@@ -39,11 +41,23 @@ export default function EditBlog() {
           onChange={(e) =>
             setBlog((prev) => ({ ...prev, contents: e.target.value }))
           }
-          defaultValue={location.state.contents}
         />
+        <select
+          className="form-select m-2"
+          value={selectorValue}
+          onChange={(e) =>
+            setBlog((prev) => ({ ...prev, category_id: e.target.value }))
+          }
+        >
+          <option selected>select Category</option>
+          {categories.length != 0 &&
+            categories.map((category) => {
+              return( <option value={category.id}>{category.title}</option> );
+            })}
+        </select>
 
         <button onClick={EditTheBlog} className="btn btn-success m-2">
-          Edit
+          Add Blog
         </button>
         <button onClick={cancelEdit} className="btn btn-danger m-2">
           Cancel

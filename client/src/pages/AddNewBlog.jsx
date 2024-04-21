@@ -6,9 +6,11 @@ import { addMyBlog, editBlogData, getMyBlogsData } from "../services/blog";
 export default function AddNewBlog() {
   const navigate = useNavigate();
   const [blog, setBlog] = useState({});
+  const [selectorValue, setSelectorValue] = useState();
 
   const EditTheBlog = async () => {
     // setBlog({...blog, id : location.state.id});
+    console.log(blog);
     const response = await addMyBlog(blog);
     toast.success("blog edited successfully....");
     navigate("/home");
@@ -38,6 +40,12 @@ export default function AddNewBlog() {
             setBlog((prev) => ({ ...prev, contents: e.target.value }))
           }
         />
+        <select className="form-select m-2" aria-label="Default select example" value={selectorValue} onChange={(e)=>setBlog((prev)=> ({...prev, category_id : e.target.value}))}>
+          <option selected>Open this select menu</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
 
         <button onClick={EditTheBlog} className="btn btn-success m-2">
           Add Blog
